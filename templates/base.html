@@ -23,6 +23,9 @@
   {% else %}
     {% block content_anon %}{% endblock %}
   {% endif %}
+  {% if user.is_authenticated %}
+    {% include "partials/logout_modal.html" %}
+  {% endif %}
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
   {% block extra_js %}{% endblock %}
