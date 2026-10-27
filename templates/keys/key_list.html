@@ -27,7 +27,7 @@
 <thead><tr class="text-left text-[11px] uppercase tracking-wide text-stone-400">
 <th class="p-3 font-medium">Key</th><th class="p-3 font-medium">Room</th><th class="p-3 font-medium">Category</th><th class="p-3 font-medium">Copy</th><th class="p-3 font-medium">Status</th><th class="p-3"></th></tr></thead>
 <tbody class="divide-y divide-stone-100">
-{% for k in keys %}
+{% for k in page_obj %}
 <tr class="hover:bg-stone-50/60">
   <td class="p-3 font-mono font-bold">{{ k.key_code }}</td>
   <td class="p-3">{{ k.room }}</td>
@@ -41,4 +41,5 @@
 </tbody>
 </table>
 </div>
+{% include "partials/pagination.html" %}
 {% endblock %}

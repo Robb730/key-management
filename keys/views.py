@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -17,8 +18,13 @@ def key_list(request):
                            | Q(description__icontains=q))
     if status:
         keys = keys.filter(status=status)
+
+    paginator = Paginator(keys, 25)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "keys/key_list.html",
-                  {"keys": keys[:200], "q": q, "status": status,
+                  {"page_obj": page_obj, "q": q, "status": status,
                    "statuses": Key.Status.choices})
 
 

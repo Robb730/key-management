@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
@@ -84,7 +85,11 @@ def borrow_dashboard(request):
 
     borrowed = (BorrowTransaction.objects
                 .select_related("key__room__building", "borrower", "released_by")
-                .filter(status=BorrowTransaction.Status.ACTIVE)[:100])
+                .filter(status=BorrowTransaction.Status.ACTIVE))
+
+    borrowed_paginator = Paginator(borrowed, 25)
+    borrowed_page = request.GET.get("borrowed_page")
+    borrowed_page_obj = borrowed_paginator.get_page(borrowed_page)
 
     shift = get_active_shift(request.user)
 
@@ -92,7 +97,7 @@ def borrow_dashboard(request):
         "q_borrower": q_borrower, "q_key": q_key,
         "borrowers": borrowers, "selected": selected,
         "active_txn": active_txn, "available_keys": available_keys,
-        "borrowed": borrowed, "shift": shift,
+        "borrowed_page_obj": borrowed_page_obj, "shift": shift,
     })
 
 
@@ -130,10 +135,15 @@ def return_confirm(request, pk):
 def shift_history(request):
     """Read-only shift list. Shifts start on login and end on logout."""
     if request.user.is_superuser:
-        shifts = GuardShift.objects.select_related("guard").all()[:200]
+        shifts = GuardShift.objects.select_related("guard").all()
     else:
-        shifts = GuardShift.objects.filter(guard=request.user)[:200]
-    return render(request, "transactions/shift_history.html", {"shifts": shifts})
+        shifts = GuardShift.objects.filter(guard=request.user)
+
+    paginator = Paginator(shifts, 25)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "transactions/shift_history.html", {"page_obj": page_obj})
 
 
 @role_required("GUARD")
@@ -146,4 +156,9 @@ def transaction_history(request):
             Q(transaction_no__icontains=q) | Q(key__key_code__icontains=q)
             | Q(borrower__first_name__icontains=q) | Q(borrower__last_name__icontains=q)
             | Q(borrower__id_number__icontains=q))
-    return render(request, "transactions/history.html", {"txns": txns[:200], "q": q})
+
+    paginator = Paginator(txns, 25)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "transactions/history.html", {"page_obj": page_obj, "q": q})

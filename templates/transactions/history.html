@@ -17,7 +17,7 @@
 <thead><tr class="text-left text-[11px] uppercase tracking-wide text-stone-400">
 <th class="p-3 font-medium">Transaction</th><th class="p-3 font-medium">Borrower</th><th class="p-3 font-medium">Key</th><th class="p-3 font-medium">Checkout</th><th class="p-3 font-medium">Status</th><th class="p-3 font-medium">Back</th></tr></thead>
 <tbody class="divide-y divide-stone-100">
-{% for t in txns %}
+{% for t in page_obj %}
 <tr class="hover:bg-stone-50/60"><td class="p-3 font-mono text-[12px]">{{ t.transaction_no }}</td>
 <td class="p-3">{{ t.borrower.full_name }}</td><td class="p-3 font-mono">{{ t.key.key_code }}</td>
 <td class="p-3 text-stone-500">{{ t.borrowed_at|date:"M j, Y, g:i A" }}</td>
@@ -27,4 +27,5 @@
 </tbody>
 </table>
 </div>
+{% include "partials/pagination.html" %}
 {% endblock %}

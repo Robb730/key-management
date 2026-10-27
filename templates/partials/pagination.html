@@ -1,0 +1,52 @@
+{% load i18n %}
+{% if page_obj.paginator.num_pages > 1 %}
+  {% with page_param=page_param|default:"page" %}
+  <nav class="mt-4 flex items-center justify-center gap-1" aria-label="{% trans 'Pagination' %}">
+    {% if page_obj.has_previous %}
+      <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}{{ page_param }}={{ page_obj.previous_page_number }}"
+         class="px-3 py-1.5 text-[13px] font-medium text-stone-700 bg-white border border-stone-300 rounded-lg hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-[#14342A] focus:border-[#14342A]"
+         aria-label="{% trans 'Previous page' %}">
+        <i data-lucide="chevron-left" class="w-4 h-4 inline-block"></i>
+      </a>
+    {% else %}
+      <span class="px-3 py-1.5 text-[13px] font-medium text-stone-300 bg-white border border-stone-200 rounded-lg cursor-not-allowed" aria-hidden="true">
+        <i data-lucide="chevron-left" class="w-4 h-4 inline-block"></i>
+      </span>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <span class="px-3 py-1.5 text-[13px] font-semibold text-white bg-[#14342A] border border-[#14342A] rounded-lg" aria-current="page">
+          {{ num }}
+        </span>
+      {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+        <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}{{ page_param }}={{ num }}"
+           class="px-3 py-1.5 text-[13px] font-medium text-stone-700 bg-white border border-stone-300 rounded-lg hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-[#14342A] focus:border-[#14342A]"
+           aria-label="{% trans 'Page' %} {{ num }}">
+          {{ num }}
+        </a>
+      {% elif num == page_obj.number|add:"-3" or num == page_obj.number|add:"3" %}
+        <span class="px-2 py-1.5 text-[13px] text-stone-400" aria-hidden="true">…</span>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}{{ page_param }}={{ page_obj.next_page_number }}"
+         class="px-3 py-1.5 text-[13px] font-medium text-stone-700 bg-white border border-stone-300 rounded-lg hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-[#14342A] focus:border-[#14342A]"
+         aria-label="{% trans 'Next page' %}">
+        <i data-lucide="chevron-right" class="w-4 h-4 inline-block"></i>
+      </a>
+    {% else %}
+      <span class="px-3 py-1.5 text-[13px] font-medium text-stone-300 bg-white border border-stone-200 rounded-lg cursor-not-allowed" aria-hidden="true">
+        <i data-lucide="chevron-right" class="w-4 h-4 inline-block"></i>
+      </span>
+    {% endif %}
+  </nav>
+
+  <p class="mt-2 text-center text-[12px] text-stone-500" aria-live="polite">
+    {% blocktrans with current=page_obj.number total=page_obj.paginator.num_pages count=page_obj.paginator.count %}
+      Page {{ current }} of {{ total }} ({{ count }} total)
+    {% endblocktrans %}
+  </p>
+  {% endwith %}
+{% endif %}
