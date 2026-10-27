@@ -10,7 +10,7 @@
 <thead><tr class="text-left text-[11px] uppercase tracking-wide text-stone-400">
 <th class="p-3 font-medium">Guard</th><th class="p-3 font-medium">Post</th><th class="p-3 font-medium">Start</th><th class="p-3 font-medium">End</th><th class="p-3 font-medium">Status</th></tr></thead>
 <tbody class="divide-y divide-stone-100">
-{% for s in shifts %}
+{% for s in page_obj %}
 <tr class="hover:bg-stone-50/60">
   <td class="p-3">{{ s.guard }}</td>
   <td class="p-3">{{ s.post }}</td>
@@ -22,4 +22,5 @@
 </tbody>
 </table>
 </div>
+{% include "partials/pagination.html" %}
 {% endblock %}
