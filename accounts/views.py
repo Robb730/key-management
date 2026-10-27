@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from .decorators import role_required
 from .forms import BorrowerForm
@@ -33,11 +34,8 @@ def login_view(request):
     return render(request, "accounts/login.html", {"error": error})
 
 
+@require_POST
 def logout_view(request):
-    if request.method == "POST":
-        logout(request)
-        return redirect("accounts:login")
-    # Allow GET logout for guard convenience (link click).
     logout(request)
     return redirect("accounts:login")
 
