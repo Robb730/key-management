@@ -20,7 +20,7 @@
 <thead><tr class="text-left text-[11px] uppercase tracking-wide text-stone-400">
 <th class="p-3 font-medium">ID No</th><th class="p-3 font-medium">Name</th><th class="p-3 font-medium">Type</th><th class="p-3 font-medium">Contact</th><th class="p-3 font-medium">Authorized</th><th class="p-3 font-medium">Active</th><th class="p-3"></th></tr></thead>
 <tbody class="divide-y divide-stone-100">
-{% for b in borrowers %}
+{% for b in page_obj %}
 <tr class="hover:bg-stone-50/60">
   <td class="p-3 font-mono">{{ b.id_number }}</td>
   <td class="p-3 font-semibold">{{ b.last_name }}, {{ b.first_name }}</td>
@@ -40,4 +40,5 @@
 </tbody>
 </table>
 </div>
+{% include "partials/pagination.html" %}
 {% endblock %}
